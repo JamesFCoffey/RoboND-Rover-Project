@@ -35,11 +35,16 @@ This is the write-up.
 
 ### Notebook Analysis
 #### 1. Run the functions provided in the notebook on test images (first with the test data provided, next on data you have recorded). Add/modify functions to allow for color selection of obstacles and rock samples.
-The function `perspect_transform()` provided in the notebook yielded ![alt text][image1]. The other provided function `color_thresh()` yielded ![alt text][image2].
+The function `perspect_transform()` provided in the notebook yielded
+![warped_example][image1]
+
+The other provided function `color_thresh()` yielded
+![warped_threshed][image2]
 
 To allow for color selection of obstacles and rock samples the following functions were added to the notebook.
 
 To select for obstacles:
+
 `def obstacle_thresh(img):
     # define range of blue color in RGB
     lower= np.array([0,0,0])
@@ -49,9 +54,10 @@ To select for obstacles:
     mask = cv2.inRange(img, lower, upper)
     return mask`
 
-![alt text][image3]
+![obstacle_threshed][image3]
 
 To select for rocks:
+
 `def rock_thresh(img):
     # define range of blue color in RGB
     lower= np.array([130,100,0])
@@ -61,9 +67,10 @@ To select for rocks:
     mask = cv2.inRange(img, lower, upper)
     return mask`
 
-![alt text][image4]
+![rock_threshed][image4]
 
 To select for navigable terrain:
+
 `def navigable_thresh(img):
     # define range of blue color in RGB
     lower= np.array([150,150,150])
@@ -73,7 +80,7 @@ To select for navigable terrain:
     mask = cv2.inRange(img, lower, upper)
     return mask`
 
-![alt text][image5]
+![navigable_threshed][image5]
 
 #### 1. Populate the `process_image()` function with the appropriate analysis steps to map pixels identifying navigable terrain, obstacles and rock samples into a worldmap.  Run `process_image()` on your test data using the `moviepy` functions provided to create video output of your result.
 
@@ -155,7 +162,7 @@ The `process_image()` was populated a follows:
     return output_image`
 
 The provided `moviepy` functions yielded the following video:
-![alt text][video1]
+![test_mapping][video1]
 
 ### Autonomous Navigation and Mapping
 
@@ -167,7 +174,3 @@ The provided `moviepy` functions yielded the following video:
 **Note: running the simulator with different choices of resolution and graphics quality may produce different results, particularly on different machines!  Make a note of your simulator settings (resolution and graphics quality set on launch) and frames per second (FPS output to terminal by `drive_rover.py`) in your writeup when you submit the project so your reviewer can reproduce your results.**
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-
-
-
-![alt text][image3]
