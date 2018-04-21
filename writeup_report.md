@@ -44,16 +44,16 @@ The other provided function `color_thresh()` yielded
 To allow for color selection of obstacles and rock samples the following functions were added to the notebook.
 
 To select for obstacles:
-
-`def obstacle_thresh(img):
+```
+def obstacle_thresh(img):
     # define range of blue color in RGB
     lower= np.array([0,0,0])
     upper = np.array([110,110,110])
 
     # Threshold the RGB image to get only obstacles
     mask = cv2.inRange(img, lower, upper)
-    return mask`
-
+    return mask
+```
 ![obstacle_threshed][image3]
 
 To select for rocks:
