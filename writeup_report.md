@@ -57,35 +57,36 @@ def obstacle_thresh(img):
 ![obstacle_threshed][image3]
 
 To select for rocks:
-
-`def rock_thresh(img):
+```
+def rock_thresh(img):
     # define range of blue color in RGB
     lower= np.array([130,100,0])
     upper = np.array([170,140,20])
 
     # Threshold the RGB image to get only rock for sampling
     mask = cv2.inRange(img, lower, upper)
-    return mask`
-
+    return mask
+```
 ![rock_threshed][image4]
 
 To select for navigable terrain:
-
-`def navigable_thresh(img):
+```
+def navigable_thresh(img):
     # define range of blue color in RGB
     lower= np.array([150,150,150])
     upper = np.array([255,255,255])
 
     # Threshold the RGB image to get only navigable terrain
     mask = cv2.inRange(img, lower, upper)
-    return mask`
-
+    return mask
+```
 ![navigable_threshed][image5]
 
 #### 1. Populate the `process_image()` function with the appropriate analysis steps to map pixels identifying navigable terrain, obstacles and rock samples into a worldmap.  Run `process_image()` on your test data using the `moviepy` functions provided to create video output of your result.
 
 The `process_image()` was populated a follows:
-`def process_image(img):
+```
+def process_image(img):
     # Example of how to use the Databucket() object defined above
     # to print the current x, y and yaw values
     # print(data.xpos[data.count], data.ypos[data.count], data.yaw[data.count])
@@ -159,7 +160,8 @@ The `process_image()` was populated a follows:
                 cv2.FONT_HERSHEY_COMPLEX, 0.4, (255, 255, 255), 1)
     data.count += 1 # Keep track of the index in the Databucket()
 
-    return output_image`
+    return output_image
+```
 
 The provided `moviepy` functions yielded the following video:
 ![test_mapping][video1]
