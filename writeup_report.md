@@ -21,6 +21,7 @@
 [image3]: ./output/obstacle_threshed.jpg
 [image4]: ./output/rock_threshed.jpg
 [image5]: ./output/navigable_threshed.jpg
+[image6]: ./output/auto_ouput.jpg
 [video1]: ./output/test_mapping.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/916/view) Points
@@ -36,9 +37,11 @@ This is the write-up.
 ### Notebook Analysis
 #### 1. Run the functions provided in the notebook on test images (first with the test data provided, next on data you have recorded). Add/modify functions to allow for color selection of obstacles and rock samples.
 The function `perspect_transform()` provided in the notebook yielded
+
 ![warped_example][image1]
 
 The other provided function `color_thresh()` yielded
+
 ![warped_threshed][image2]
 
 To allow for color selection of obstacles and rock samples the following functions were added to the notebook.
@@ -170,9 +173,39 @@ The provided `moviepy` functions yielded the following video:
 
 #### 1. Fill in the `perception_step()` (at the bottom of the `perception.py` script) and `decision_step()` (in `decision.py`) functions in the autonomous mapping scripts and an explanation is provided in the writeup of how and why these functions were modified as they were.
 
+For `perception_step()`, the functions `perspect_transform()`, `obstacle_thresh()`, `rock_thresh()`, `navigable_thresh()`, `rover_coords()`, and `pix_to_world()` were added as was done in the `process_image()` in the Jupyter notebook.
+
+Differently from the notebook, the worldmap is updated with thresholds (+/- 0.25 degrees from normal) on the pitch and roll to improve map fidelity. Also, rover-centric positions were converted to polar coordinates.
+
+```
+# 7) Update Rover worldmap (to be displayed on right side of screen)
+  if Rover.pitch and Rover.roll < 0.25: # Set thresholds near zero in roll and pitch to determine which transformed images are valid for mapping.
+      Rover.worldmap[obstacle_x_world, obstacle_y_world, 0] += 1
+      Rover.worldmap[rock_x_world, rock_y_world, 1] += 1
+      Rover.worldmap[navigable_x_world, navigable_y_world, 2] += 1
+  elif Rover.pitch and Rover.roll > 395.75:
+      Rover.worldmap[obstacle_x_world, obstacle_y_world, 0] += 1
+      Rover.worldmap[rock_x_world, rock_y_world, 1] += 1
+      Rover.worldmap[navigable_x_world, navigable_y_world, 2] += 1
+
+  # 8) Convert rover-centric pixel positions to polar coordinates
+  #Update Rover pixel distances and angles
+  Rover.nav_dists, Rover.nav_angles = to_polar_coords(navigable_xpix, navigable_ypix)
+```
+
+The `to_polar_coords()` function is defined as:
+```
+# Define a function to convert from cartesian to polar coordinates
+def to_polar_coords(xpix, ypix):
+    # Calculate distance to each pixel
+    dist = np.sqrt(xpix**2 + ypix**2)
+    # Calculate angle using arctangent function
+    angles = np.arctan2(ypix, xpix)
+    return dist, angles
+```
+`decision.py` was not modified as it did not need to be to meet the requirement to map at least 40% of the environment at 60% fidelity and locate at least one of the rock sample.
 
 #### 2. Launching in autonomous mode your rover can navigate and map autonomously.  Explain your results and how you might improve them in your writeup.  
 
-**Note: running the simulator with different choices of resolution and graphics quality may produce different results, particularly on different machines!  Make a note of your simulator settings (resolution and graphics quality set on launch) and frames per second (FPS output to terminal by `drive_rover.py`) in your writeup when you submit the project so your reviewer can reproduce your results.**
-
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+The simulator was run at a resolution of 1680x1050 and a graphics quality of fantastic. The FPS was 35. I achieved 66.2% mapped, 71.6% fidelity in 345.5s. The only approach I took was to increase the fidelity by putting thresholds on roll and pitch. The pipeline might fail if there were more obstacles in the way or if it had to pick up the rocks. If I were going to pursue this project further, I would optimize time, % mapped, and optimize finding all rocks. I might also add functions to avoid obstacles and pick up rocks.
+![auto_ouput][image6]
